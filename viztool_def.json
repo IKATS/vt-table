@@ -1,0 +1,10 @@
+{
+    "name": "Table",
+    "types": ["table"],
+    "classRef": Table,
+    "keyMap": {
+        "double click": "Double Click on a row header, a column header or a cell to explore its linked content -when defined-, in a deeper view. When a link exists the mouse pointer is changed",
+        "drag": "Drag header column separators to change the column size."
+    },
+    "desc": "Display a table whose sub-parts can be explored by clicking on them."
+}
