@@ -393,7 +393,7 @@ class Table extends VizTool {
                 if (isNaN(cell)) {
                     d3_txt_area = self.addTextArea(d3cell, cell, self.colors.cellBorder);
                 } else {
-                    d3_txt_area = self.addTextArea(d3cell, parseFloat(cell).toFixed(3), self.colors.cellBorder, null, cell);
+                    d3_txt_area = self.addTextArea(d3cell, parseFloat(cell), self.colors.cellBorder, null, cell);
                 }
 
                 self.d3.o.cells[row_index].push(d3cell);
@@ -529,7 +529,7 @@ class Table extends VizTool {
         // Only subscribes when data link definition is complete:
         if (((defaultDataLink && defaultDataLink.val) || (specificDataLinkDef && specificDataLinkDef.val)) &&
             ((defaultDataLink && defaultDataLink.type) || (specificDataLinkDef && specificDataLinkDef.type)) &&
-            ((defaultDataLink && defaultDataLink.context) || (specificDataLinkDef && specificDataLinkDef.context) )) {
+            ((defaultDataLink && defaultDataLink.context) || (specificDataLinkDef && specificDataLinkDef.context))) {
 
             subscriber.on("dblclick", function () {
                 self.doubleClicked(defaultDataLink, specificDataLinkDef, col_index, row_index);
@@ -635,9 +635,34 @@ class Table extends VizTool {
 
     setupDefaultColWidths() {
         const self = this;
+        var rowsWidth = self.findMaxColumnWidthsOfATable(self.data.content.cells);
         self.d3.o.col_headers.forEach(function (header, index) {
-            self.setupHeadersWidth(header, index + 1, header.text().length * 10);
+            self.setupHeadersWidth(
+                header,
+                index + 1,
+                Math.max(header.text().length * 8, rowsWidth[index] * 8))
         });
+    };
+
+    /**
+     * Finds and returns the maximum content length of an bi-dimensional array at a x index (verticaly)
+     * @param tab : bi-dimesional array to look at
+     * @param index : col used to retrive max length
+     * @return array : array containing max width for each column of the tab
+     */
+    findMaxColumnWidthsOfATable(tab) {
+
+        let nbColumns = tab[0].length;
+        var max = new Array(nbColumns).fill(0);
+
+        tab.forEach(function (row) {
+            for (let i = 0; i < nbColumns; i++) {
+                max[i] = Math.max(max[i], row[i].length);
+            }
+        });
+
+        return max;
+
     }
 
     setupHeadersWidth(attachedCell, index_col, width) {
