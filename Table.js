@@ -645,9 +645,8 @@ class Table extends VizTool {
     };
 
     /**
-     * Finds and returns the maximum content length of an bi-dimensional array at a x index (verticaly)
+     * Finds and returns the maximum content length of an bi-dimensional array
      * @param tab : bi-dimesional array to look at
-     * @param index : col used to retrive max length
      * @return array : array containing max width for each column of the tab
      */
     findMaxColumnWidthsOfATable(tab) {
@@ -657,7 +656,7 @@ class Table extends VizTool {
 
         tab.forEach(function (row) {
             for (let i = 0; i < nbColumns; i++) {
-                max[i] = Math.max(max[i], row[i].length);
+                max[i] = Math.max(max[i], row[i].toString().length);
             }
         });
 

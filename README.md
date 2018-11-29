@@ -3,14 +3,9 @@
 
 This viz-tool allows to creates the rendering of a table for ikats. 
 
-# Inputs
-
-vt-table use a Table object to 
-
-
 ### Input and parameters
 
-The viz-tool takes 1 input:
+The viz-tool takes 1 only input:
 
 * **Table**: The Table object to generate the rendering.
 
@@ -71,5 +66,5 @@ the Table object looks like this :
         }
     }
     
-the easyest way to generate à table on ikats is to feed a CSV file in the `population selection` operator
+the easiest way to generate à table on ikats is to feed a CSV file in the `population selection` operator
 
