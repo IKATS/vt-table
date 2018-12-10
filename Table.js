@@ -259,6 +259,7 @@ class Table extends VizTool {
 
         self.d3.o.main = self.d3.o.container.append("div").attr("id", "tviz_main")
             .style("position", "relative")
+            .style("font-family", "Courier New, Courier, monospace")
             .style("height", "calc(100% - " +
                 (self.top_panel_height + self.footer_height) + "px)");
 
@@ -640,9 +641,9 @@ class Table extends VizTool {
             self.setupHeadersWidth(
                 header,
                 index + 1,
-                Math.max(header.text().length * 8, rowsWidth[index] * 8))
+                Math.max(header.text().length * 12, rowsWidth[index] * 12));
         });
-    };
+    }
 
     /**
      * Finds and returns the maximum content length of an bi-dimensional array
