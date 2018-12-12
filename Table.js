@@ -641,7 +641,7 @@ class Table extends VizTool {
             self.setupHeadersWidth(
                 header,
                 index + 1,
-                Math.max(header.text().length * 12, rowsWidth[index] * 12));
+                Math.max(header.text().length * 14, rowsWidth[index] * 12));
         });
     }
 
