@@ -149,6 +149,16 @@ class Table extends VizTool {
             o: {},
             e: {}
         };
+
+
+        //width in px calculation
+        let headerWidth = 0; // max length of the case (in char)
+        let nbCases = this.data.headers.row.data.slice(1).length; // number of cases to iterate
+        for (let i = 0; i < nbCases; i++) {
+            headerWidth = Math.max(headerWidth, this.data.headers.row.data.slice(1)[i].length);
+        }
+        headerWidth = headerWidth*12; // max is now the max length of the column in px
+        this.cell_px_width = headerWidth;
     }
 
     /**
@@ -239,6 +249,7 @@ class Table extends VizTool {
         const self = this;
         self.initEvents();
         self.d3.o.container = d3.select("#" + self.container);
+
 
 
         //    top_panel
@@ -358,12 +369,12 @@ class Table extends VizTool {
         // When the corner is defined, adapt the size of the cells to match title
         if (self.info_corner.col) {
             if (self.info_corner.row) {
-                self.setupRowHeadersWidth(Math.max(self.info_corner.col.length * self.AVG_CHAR_SIZE, self.info_corner.row.length * self.AVG_CHAR_SIZE) * 2 + 30);
+                self.setupRowHeadersWidth(Math.max(self.cell_px_width, self.cell_px_width));
             } else {
-                self.setupRowHeadersWidth(self.info_corner.col.length * self.AVG_CHAR_SIZE + 20);
+                self.setupRowHeadersWidth(self.cell_px_width);
             }
         } else if (self.info_corner.row) {
-            self.setupRowHeadersWidth(self.info_corner.row.length * self.AVG_CHAR_SIZE + 20);
+            self.setupRowHeadersWidth(self.cell_px_width);
         }
 
         self.displayContentCells();
@@ -641,7 +652,7 @@ class Table extends VizTool {
             self.setupHeadersWidth(
                 header,
                 index + 1,
-                Math.max(header.text().length * 14, rowsWidth[index] * 12));
+                Math.max(self.cell_px_width, rowsWidth[index] * 12));
         });
     }
 
