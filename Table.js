@@ -663,8 +663,13 @@ class Table extends VizTool {
      */
     findMaxColumnWidthsOfATable(tab) {
 
+        const self = this;
         let nbColumns = tab[0].length;
-        var max = new Array(nbColumns).fill(0);
+        var max = new Array(nbColumns);
+        //filling the tab with the header width
+        for (let i = 0; i < nbColumns; i++) {
+            max[i] = self.data.headers.col.data.slice(1)[i].length;
+        }
 
         tab.forEach(function (row) {
             for (let i = 0; i < nbColumns; i++) {
