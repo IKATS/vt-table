@@ -152,7 +152,7 @@ class Table extends VizTool {
 
 
         //width in px calculation
-        let headerWidth = 0; // max length of the case (in char)
+        let headerWidth = this.info_corner.col.length; // max length of the case (in char)
         let nbCases = this.data.headers.row.data.slice(1).length; // number of cases to iterate
         for (let i = 0; i < nbCases; i++) {
             headerWidth = Math.max(headerWidth, this.data.headers.row.data.slice(1)[i].length);
