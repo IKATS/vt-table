@@ -50,14 +50,14 @@
  *     - in header context: list of objects having properties val, type or context
  *     - in content context: list of list of objects having properties val, type or  context
  *
- * - precisions about the val/type/context properties - defined either by default_links or by links contexts -:
+ * - precision about the val/type/context properties - defined either by default_links or by links contexts -:
  *   - a data link is active only when the three properties are defined on the item
  *   - the property type: functional type of pointed data
  *   - the property val: the parameters of the link. Example: key in a database table.
  *   - the property context: defines how to retrieve the linked data. Examples:
  *     - 'processdata': when the linked data is the processdata having the key=val
- *     - 'tsuid' when the linked data is the timeserie whose tsuid=val
- *     - 'metadata' when the linked data is the metada whose key=val
+ *     - 'tsuid' when the linked data is the timeseries whose tsuid=val
+ *     - 'metadata' when the linked data is the metadata whose key=val
  *
  *  Complete example of JSON content:
  *  {
@@ -132,6 +132,8 @@ class Table extends VizTool {
             "cellBorder": "rgba(0,0,0,0.2)",
             "labelBorder": "rgba(0,0,0,0.2)"
         };
+
+        // Review#497: Useless
         // Estimation of a character width (used to compute width of cells)
         this.AVG_CHAR_SIZE = 8;
 
@@ -150,6 +152,10 @@ class Table extends VizTool {
             e: {}
         };
 
+        // Review#497: Comments begin with space + uppercase letter on a dedicated line, not at the end of a instruction
+        // Review#497: Don't talk about "cases" but "cells"
+        // Review#497: This is not the right place to do this, this is not a construction but a specification about the display, move it to display method
+        // Review#497: Why not using `this.cell_px_width = this.data.headers.row.data.slice(1).map(x => x.length).reduce((x,y)=> Math.max(x,y)) *12`
 
         //width in px calculation
         let headerWidth = this.info_corner.col.length; // max length of the case (in char)
@@ -165,9 +171,9 @@ class Table extends VizTool {
      * Handles the scroll event
      */
     content_scroll() {
-        let elmnt = document.getElementById("tviz_sc_content");
-        let x = elmnt.scrollLeft;
-        let y = elmnt.scrollTop;
+        let element = document.getElementById("tviz_sc_content");
+        let x = element.scrollLeft;
+        let y = element.scrollTop;
         let c_headers = document.getElementById("tviz_col_headers");
         c_headers.scrollLeft = x;
         let r_headers = document.getElementById("tviz_row_headers");
@@ -180,7 +186,7 @@ class Table extends VizTool {
     initEvents() {
         this.d3.e.resizeHeader = {};
 
-        // Defines the half width of the zone trigerring the event resizing a column.
+        // Defines the half width of the zone triggering the event resizing a column.
         this.d3.e.selectorHalfWidth = 5;
     }
 
@@ -250,8 +256,6 @@ class Table extends VizTool {
         self.initEvents();
         self.d3.o.container = d3.select("#" + self.container);
 
-
-
         //    top_panel
         // ------------------------
         //    main
@@ -307,8 +311,8 @@ class Table extends VizTool {
                         .attr("stroke-width", "1px")
                         .attr("stroke", "black");
                     self.addTextArea(corner_cell, self.info_corner.col, self.colors.cornerBorder, self.colors.defaultLabelBackGround, null, "corner_col");
-                } else { // only col
-
+                } else { 
+                    // Column only
                     console.debug("found only col");
                     let corner_cell = self.d3.o.corner.append("table")
                         .append("tr").append("th")
@@ -317,8 +321,8 @@ class Table extends VizTool {
                         .style("min-height", self.cell_px_height).style("max-height", self.cell_px_height);
                     self.addTextArea(corner_cell, self.info_corner.col, self.colors.cornerBorder, self.colors.defaultLabelBackGround);
                 }
-            } else if (self.info_corner.row) { // only row
-
+            } else if (self.info_corner.row) { 
+                // Row only
                 console.debug("found only row");
                 let corner_cell = self.d3.o.corner.append("table")
                     .append("tr").append("th")
@@ -365,10 +369,12 @@ class Table extends VizTool {
         self.displayColumnHeaders();
 
         self.displayRowHeaders();
-
+        
+        // Review#497 Simplify this block
         // When the corner is defined, adapt the size of the cells to match title
         if (self.info_corner.col) {
             if (self.info_corner.row) {
+                // Review#497 Why doing `Math.max(x,x)` ??
                 self.setupRowHeadersWidth(Math.max(self.cell_px_width, self.cell_px_width));
             } else {
                 self.setupRowHeadersWidth(self.cell_px_width);
@@ -417,9 +423,9 @@ class Table extends VizTool {
                     self.cellLeft(row_index, col_index);
                 });
 
-                // note: the column index of cell, X, is matching the column header index X+1, because of the corner
+                // Note: the column index of cell, X, is matching the column header index X+1, because of the corner
                 //       the row index of cell, Y, is matching the row header index Y+1, because of the corner
-                // kept as-is for the moment
+                // Kept as-is for the moment
                 self.addDataLinkEvent(self.data.content, d3_txt_area, col_index + 1, row_index + 1);
 
             });
@@ -512,8 +518,8 @@ class Table extends VizTool {
      *
      * @param dataParent: this.data part: object having optional properties default_links or links
      * @param subscriber: dom element subscribed to the data link selection
-     * @param col_index: the column: index used in order to retrieve the specific definion from links. null when undefined.
-     * @param row_index: the row index: index used in order to retrieve the specific definion from links. null when undefined.
+     * @param col_index: the column: index used in order to retrieve the specific definition from links. null when undefined.
+     * @param row_index: the row index: index used in order to retrieve the specific definition from links. null when undefined.
      */
     addDataLinkEvent(dataParent, subscriber, col_index, row_index) {
         const self = this;
@@ -521,7 +527,7 @@ class Table extends VizTool {
         let col_defined = col_index !== null;
         let row_defined = row_index !== null;
 
-        // reads the specific info according to the context ...
+        // Reads the specific info according to the context ...
         let specificDataLinkDef = null;
         if (col_defined && row_defined && dataParent.links && dataParent.links[row_index - 1][col_index - 1]) {
             // ... from cell content
@@ -658,26 +664,26 @@ class Table extends VizTool {
 
     /**
      * Finds and returns the maximum content length of an bi-dimensional array
-     * @param tab : bi-dimesional array to look at
+     * @param tab : bi-dimensional array to look at
      * @return array : array containing max width for each column of the tab
      */
     findMaxColumnWidthsOfATable(tab) {
 
         const self = this;
         let nbColumns = tab[0].length;
-        var max = new Array(nbColumns);
-        //filling the tab with the header width
+        var maxValue = new Array(nbColumns);
+        // Filling the tab with the header width
         for (let i = 0; i < nbColumns; i++) {
-            max[i] = self.data.headers.col.data.slice(1)[i].length;
+            maxValue[i] = self.data.headers.col.data.slice(1)[i].length;
         }
 
         tab.forEach(function (row) {
             for (let i = 0; i < nbColumns; i++) {
-                max[i] = Math.max(max[i], row[i].toString().length);
+                maxValue[i] = Math.max(maxValue[i], row[i].toString().length);
             }
         });
 
-        return max;
+        return maxValue;
 
     }
 
@@ -809,10 +815,10 @@ class Table extends VizTool {
      */
     sleep() {
         // Save scrolling state :
-        let elmnt = document.getElementById("tviz_sc_content");
+        let element = document.getElementById("tviz_sc_content");
         this.savedScroll = {
-            x: elmnt.scrollLeft,
-            y: elmnt.scrollTop
+            x: element.scrollLeft,
+            y: element.scrollTop
         };
     }
 
