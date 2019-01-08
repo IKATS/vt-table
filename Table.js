@@ -132,11 +132,8 @@ class Table extends VizTool {
             "cellBorder": "rgba(0,0,0,0.2)",
             "labelBorder": "rgba(0,0,0,0.2)"
         };
-
-        // Review#497: Useless
+        this.cell_px_width = Math.max(this.data.headers.row.data.slice(1).map(x => x.length).reduce((x,y)=> Math.max(x,y)), this.info_corner.col.length) *12;
         // Estimation of a character width (used to compute width of cells)
-        this.AVG_CHAR_SIZE = 8;
-
         if (this.data.headers) {
             this.info_corner = {};
             if (this.data.headers.col.data[0]) {
@@ -152,19 +149,7 @@ class Table extends VizTool {
             e: {}
         };
 
-        // Review#497: Comments begin with space + uppercase letter on a dedicated line, not at the end of a instruction
-        // Review#497: Don't talk about "cases" but "cells"
-        // Review#497: This is not the right place to do this, this is not a construction but a specification about the display, move it to display method
-        // Review#497: Why not using `this.cell_px_width = this.data.headers.row.data.slice(1).map(x => x.length).reduce((x,y)=> Math.max(x,y)) *12`
 
-        //width in px calculation
-        let headerWidth = this.info_corner.col.length; // max length of the case (in char)
-        let nbCases = this.data.headers.row.data.slice(1).length; // number of cases to iterate
-        for (let i = 0; i < nbCases; i++) {
-            headerWidth = Math.max(headerWidth, this.data.headers.row.data.slice(1)[i].length);
-        }
-        headerWidth = headerWidth*12; // max is now the max length of the column in px
-        this.cell_px_width = headerWidth;
     }
 
     /**
@@ -254,6 +239,7 @@ class Table extends VizTool {
     display() {
         const self = this;
         self.initEvents();
+
         self.d3.o.container = d3.select("#" + self.container);
 
         //    top_panel
@@ -311,7 +297,7 @@ class Table extends VizTool {
                         .attr("stroke-width", "1px")
                         .attr("stroke", "black");
                     self.addTextArea(corner_cell, self.info_corner.col, self.colors.cornerBorder, self.colors.defaultLabelBackGround, null, "corner_col");
-                } else { 
+                } else {
                     // Column only
                     console.debug("found only col");
                     let corner_cell = self.d3.o.corner.append("table")
@@ -321,7 +307,7 @@ class Table extends VizTool {
                         .style("min-height", self.cell_px_height).style("max-height", self.cell_px_height);
                     self.addTextArea(corner_cell, self.info_corner.col, self.colors.cornerBorder, self.colors.defaultLabelBackGround);
                 }
-            } else if (self.info_corner.row) { 
+            } else if (self.info_corner.row) {
                 // Row only
                 console.debug("found only row");
                 let corner_cell = self.d3.o.corner.append("table")
@@ -369,19 +355,15 @@ class Table extends VizTool {
         self.displayColumnHeaders();
 
         self.displayRowHeaders();
-        
-        // Review#497 Simplify this block
-        // When the corner is defined, adapt the size of the cells to match title
+
         if (self.info_corner.col) {
-            if (self.info_corner.row) {
-                // Review#497 Why doing `Math.max(x,x)` ??
-                self.setupRowHeadersWidth(Math.max(self.cell_px_width, self.cell_px_width));
-            } else {
-                self.setupRowHeadersWidth(self.cell_px_width);
-            }
+            self.setupRowHeadersWidth(self.cell_px_width);
         } else if (self.info_corner.row) {
             self.setupRowHeadersWidth(self.cell_px_width);
         }
+
+
+
 
         self.displayContentCells();
 
