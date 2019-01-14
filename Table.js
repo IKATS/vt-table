@@ -132,7 +132,7 @@ class Table extends VizTool {
             "cellBorder": "rgba(0,0,0,0.2)",
             "labelBorder": "rgba(0,0,0,0.2)"
         };
-        this.cell_px_width = Math.max(this.data.headers.row.data.slice(1).map(x => x.length).reduce((x,y)=> Math.max(x,y)), this.info_corner.col.length) *12;
+
         // Estimation of a character width (used to compute width of cells)
         if (this.data.headers) {
             this.info_corner = {};
@@ -143,7 +143,8 @@ class Table extends VizTool {
                 this.info_corner.row = this.data.headers.row.data[0];
             }
         }
-
+        this.cell_px_width = Math.max(this.data.headers.row.data.slice(1).map(x => x.length).reduce((x,y)=> Math.max(x,y)), this.info_corner.col.length) *12;
+        
         this.d3 = {
             o: {},
             e: {}
