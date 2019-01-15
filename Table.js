@@ -143,12 +143,7 @@ class Table extends VizTool {
                 this.info_corner.row = this.data.headers.row.data[0];
             }
         }
-        // Review#497: (added again) This is not the right place to do this, this is not a construction but a specification about the display, move it to display method or explain
-        // Review#497: You pasted it but line is a bit long, split it
-        // Review#497: if there is no col headers in data, next instruction will fail
-        // Review#497: if there is no row headers in dataz, next instruction will fail
-        this.cell_px_width = Math.max(this.data.headers.row.data.slice(1).map(x => x.length).reduce((x,y)=> Math.max(x,y)), this.info_corner.col.length) *12;
-        
+
         this.d3 = {
             o: {},
             e: {}
@@ -243,6 +238,16 @@ class Table extends VizTool {
      */
     display() {
         const self = this;
+
+        //width in px calculation
+        if(self.data.headers.row.data.slice(1).length < 0 && self.info_corner.col) {
+            self.cell_px_width = Math.max(
+                self.data.headers.row.data.slice(1).map(x => x.length).reduce((x,y)=> Math.max(x,y)),
+                self.info_corner.col.length) *12;
+        }else {
+            notify().error("The table you require is not filled.");
+        }
+
         self.initEvents();
 
         self.d3.o.container = d3.select("#" + self.container);
@@ -361,14 +366,9 @@ class Table extends VizTool {
 
         self.displayRowHeaders();
 
-        // Review#497: Why the `else if` ? I don't understand the constraint. I think this can be simplified again
-        // Review#497: You removed former comments, pay attention
-        if (self.info_corner.col) {
-            // Review#497: Now the code is clear, I don't understand the purpose of a function named "setup**Row**HeadersWidth" in a `if` instruction dealing with "col". Could you explain ? (oral)
-            self.setupRowHeadersWidth(self.cell_px_width);
-        } else if (self.info_corner.row) {
-            self.setupRowHeadersWidth(self.cell_px_width);
-        }
+        // Adapt the size of the cells to match title
+        // Col-header is the row-header when there is only one title to the table
+        self.setupRowHeadersWidth(self.cell_px_width);
 
 
 
