@@ -111,7 +111,7 @@ class Table extends VizTool {
         // - data is the table content
         // - data is the name of the table (so get the content)
         let real_data = data;
-        if (typeof(data) === "string") {
+        if (typeof (data) === "string") {
             real_data = ikats.api.table.read(data).data;
         }
 
@@ -204,8 +204,7 @@ class Table extends VizTool {
                     console.error(error);
                 }
             });
-        }
-        else if (context === "raw") {
+        } else if (context === "raw") {
             self.addViz("Curve", val);
         }
 
@@ -239,12 +238,17 @@ class Table extends VizTool {
     display() {
         const self = this;
 
-        //width in px calculation
-        if(self.data.headers.row.data.slice(1).length < 0 && self.info_corner.col) {
-            self.cell_px_width = Math.max(
-                self.data.headers.row.data.slice(1).map(x => x.length).reduce((x,y)=> Math.max(x,y)),
-                self.info_corner.col.length) *12;
-        }else {
+        // Review#497: if there is no col headers in data (meaning no "col" member in "headers"), next instruction will fail
+        // Review#497: same for row
+        // Width calculation (in px)
+        if (self.data.headers.row.data.slice(1).length < 0 && self.info_corner.col) {
+            self.cell_px_width = 12 * Math.max(
+                self.data.headers.row.data.slice(1)
+                    .map(x => x.length)
+                    .reduce((x, y) => Math.max(x, y)),
+                self.info_corner.col.length);
+        } else {
+            // Review#497:  In this case : self.cell_px_width is never filled so it will fail elsewhere if we use it. Initialize a value in constructor
             notify().error("The table you require is not filled.");
         }
 
@@ -369,9 +373,6 @@ class Table extends VizTool {
         // Adapt the size of the cells to match title
         // Col-header is the row-header when there is only one title to the table
         self.setupRowHeadersWidth(self.cell_px_width);
-
-
-
 
         self.displayContentCells();
 
@@ -523,13 +524,11 @@ class Table extends VizTool {
         if (col_defined && row_defined && dataParent.links && dataParent.links[row_index - 1][col_index - 1]) {
             // ... from cell content
             specificDataLinkDef = dataParent.links[row_index - 1][col_index - 1];
-        }
-        else if (col_defined && self.data.headers.col.links && self.data.headers.col.links[col_index]) {
+        } else if (col_defined && self.data.headers.col.links && self.data.headers.col.links[col_index]) {
             // ... from column header
             defaultDataLink = self.data.headers.col.default_links;
             specificDataLinkDef = self.data.headers.col.links[col_index];
-        }
-        else if (row_defined && self.data.headers.row.links && self.data.headers.row.links[row_index]) {
+        } else if (row_defined && self.data.headers.row.links && self.data.headers.row.links[row_index]) {
             // ... from row header
             defaultDataLink = self.data.headers.row.default_links;
             specificDataLinkDef = self.data.headers.row.links[row_index];
@@ -776,8 +775,7 @@ class Table extends VizTool {
                     self.setupHeadersWidth(attachedCell, index_col, computedWidth);
                 });
             separator.call(dragBehaviour);
-        }
-        else {
+        } else {
             this.d3.o.columnSeparators.push(null);
         }
     }
