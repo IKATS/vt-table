@@ -150,6 +150,7 @@ class Table extends VizTool {
         };
 
 
+
     }
 
     /**
@@ -238,17 +239,14 @@ class Table extends VizTool {
     display() {
         const self = this;
 
-        // Review#497: if there is no col headers in data (meaning no "col" member in "headers"), next instruction will fail
-        // Review#497: same for row
         // Width calculation (in px)
-        if (self.data.headers.row.data.slice(1).length < 0 && self.info_corner.col) {
+        if (this.data.headers && this.info_corner.col) {
             self.cell_px_width = 12 * Math.max(
                 self.data.headers.row.data.slice(1)
                     .map(x => x.length)
                     .reduce((x, y) => Math.max(x, y)),
                 self.info_corner.col.length);
         } else {
-            // Review#497:  In this case : self.cell_px_width is never filled so it will fail elsewhere if we use it. Initialize a value in constructor
             notify().error("The table you require is not filled.");
         }
 
@@ -664,7 +662,11 @@ class Table extends VizTool {
         var maxValue = new Array(nbColumns);
         // Filling the tab with the header width
         for (let i = 0; i < nbColumns; i++) {
-            maxValue[i] = self.data.headers.col.data.slice(1)[i].length;
+            if (self.data.headers.col.data.slice(1)[i]) {
+                maxValue[i] = self.data.headers.col.data.slice(1)[i].length;
+            } else {
+                maxValue[i] = 0;
+            }
         }
 
         tab.forEach(function (row) {
