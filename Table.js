@@ -121,7 +121,7 @@ class Table extends VizTool {
 
         this.name = "Table";
         this.cell_px_height = 24;
-        this.cell_px_width = 80;
+        this.cell_row_headers_px_width = 80;
         this.top_panel_height = 0;
         this.footer_height = 0;
         this.fontSize = 11;
@@ -241,7 +241,7 @@ class Table extends VizTool {
 
         // Width calculation (in px)
         if (this.data.headers && this.info_corner.col) {
-            self.cell_px_width = 12 * Math.max(
+            self.cell_row_headers_px_width = 12 * Math.max(
                 self.data.headers.row.data.slice(1)
                     .map(x => x.length)
                     .reduce((x, y) => Math.max(x, y)),
@@ -281,7 +281,7 @@ class Table extends VizTool {
         self.d3.o.corner = self.d3.o.main.append("div").attr("id", "tviz_corner")
             .style("position", "absolute")
             .style("height", self.cell_px_height + "px")
-            .style("width", self.cell_px_width + "px");
+            .style("width", self.cell_row_headers_px_width + "px");
 
 
         // Display corner header
@@ -315,7 +315,7 @@ class Table extends VizTool {
                     let corner_cell = self.d3.o.corner.append("table")
                         .append("tr").append("th")
                         .style("font-size", (self.fontSize + 1) + "px")
-                        .style("min-width", self.cell_px_width).style("max-width", self.cell_px_width)
+                        .style("min-width", self.cell_row_headers_px_width).style("max-width", self.cell_row_headers_px_width)
                         .style("min-height", self.cell_px_height).style("max-height", self.cell_px_height);
                     self.addTextArea(corner_cell, self.info_corner.col, self.colors.cornerBorder, self.colors.defaultLabelBackGround);
                 }
@@ -325,7 +325,7 @@ class Table extends VizTool {
                 let corner_cell = self.d3.o.corner.append("table")
                     .append("tr").append("th")
                     .style("font-size", (self.fontSize + 1) + "px")
-                    .style("min-width", self.cell_px_width).style("max-width", self.cell_px_width)
+                    .style("min-width", self.cell_row_headers_px_width).style("max-width", self.cell_row_headers_px_width)
                     .style("min-height", self.cell_px_height).style("max-height", self.cell_px_height);
                 self.addTextArea(corner_cell, self.info_corner.row, self.colors.cornerBorder, self.colors.defaultLabelBackGround);
             }
@@ -335,9 +335,9 @@ class Table extends VizTool {
 
         self.d3.o.div_col_headers = self.d3.o.main.append("div").attr("id", "tviz_col_headers")
             .style("position", "absolute")
-            .style("left", self.cell_px_width + "px")
+            .style("left", self.cell_row_headers_px_width + "px")
             .style("height", self.cell_px_height + "px")
-            .style("width", "calc(100% - " + self.cell_px_width + "px)")
+            .style("width", "calc(100% - " + self.cell_row_headers_px_width + "px)")
             .style("overflow", "hidden")
             .append("table")
             .append("tr")
@@ -346,7 +346,7 @@ class Table extends VizTool {
         self.d3.o.div_row_headers = self.d3.o.main.append("div").attr("id", "tviz_row_headers")
             .style("position", "absolute")
             .style("top", self.cell_px_height + "px")
-            .style("width", self.cell_px_width + "px")
+            .style("width", self.cell_row_headers_px_width + "px")
             .style("height", "calc(100% - " + self.cell_px_height + "px)")
             .style("overflow", "hidden")
             .append("table")
@@ -354,10 +354,10 @@ class Table extends VizTool {
 
         self.d3.o.sc_content = self.d3.o.main.append("div").attr("id", "tviz_sc_content");
         self.d3.o.sc_content.style("position", "absolute")
-            .style("left", self.cell_px_width + "px")
+            .style("left", self.cell_row_headers_px_width + "px")
             .style("top", self.cell_px_height + "px")
             .style("max-height", "calc(100% - " + self.cell_px_height + "px)")
-            .style("max-width", "calc(100% - " + self.cell_px_width + "px)")
+            .style("max-width", "calc(100% - " + self.cell_row_headers_px_width + "px)")
             .style("overflow", "auto");
 
         self.d3.o.sc_content.on("scroll", self.content_scroll);
@@ -370,7 +370,7 @@ class Table extends VizTool {
 
         // Adapt the size of the cells to match title
         // Col-header is the row-header when there is only one title to the table
-        self.setupRowHeadersWidth(self.cell_px_width);
+        self.setupRowHeadersWidth(self.cell_row_headers_px_width);
 
         self.displayContentCells();
 
@@ -392,7 +392,7 @@ class Table extends VizTool {
 
             row.forEach(function (cell, col_index) {
                 let d3cell = r.append("td")
-                    .style("min-width", self.cell_px_width).style("max-width", self.cell_px_width)
+                    .style("min-width", self.cell_row_headers_px_width).style("max-width", self.cell_row_headers_px_width)
                     .style("min-height", self.cell_px_height).style("max-height", self.cell_px_height);
 
                 let d3_txt_area;
@@ -434,9 +434,9 @@ class Table extends VizTool {
         self.data.headers.col.data.slice(1).forEach(function (header, index_header) {
 
             let header_cell = self.d3.o.div_col_headers.append("th")
-                .style("min-width", self.cell_px_width + "px")
+                .style("min-width", self.cell_row_headers_px_width + "px")
                 .style("min-height", self.cell_px_height + "px")
-                .style("max-width", self.cell_px_width + "px")
+                .style("max-width", self.cell_row_headers_px_width + "px")
                 .style("max-height", self.cell_px_height + "px");
 
             let colTextArea = self.addTextArea(header_cell, header, self.colors.labelBorder, self.colors.defaultLabelBackGround);
@@ -453,9 +453,9 @@ class Table extends VizTool {
         });
         let end_of_col_headers = self.d3.o.div_col_headers.append("th")
             .attr("valign", "top")
-            .style("min-width", self.cell_px_width + "px")
+            .style("min-width", self.cell_row_headers_px_width + "px")
             .style("min-height", self.cell_px_height + "px")
-            .style("max-width", self.cell_px_width + "px")
+            .style("max-width", self.cell_row_headers_px_width + "px")
             .style("max-height", self.cell_px_height + "px");
 
         self.addTextArea(end_of_col_headers, "", "transparent", "transparent");
@@ -472,7 +472,7 @@ class Table extends VizTool {
         self.data.headers.row.data.slice(1).forEach(function (header, index_header) {
 
             let header_cell = self.d3.o.div_row_headers.append("tr").append("th")
-                .style("min-width", self.cell_px_width).style("max-width", self.cell_px_width)
+                .style("min-width", self.cell_row_headers_px_width).style("max-width", self.cell_row_headers_px_width)
                 .style("min-height", self.cell_px_height).style("max-height", self.cell_px_height);
 
             let rowTextArea = self.addTextArea(header_cell, header, self.colors.labelBorder, self.colors.defaultLabelBackGround);
@@ -485,9 +485,9 @@ class Table extends VizTool {
         });
         let end_of_row_headers = self.d3.o.div_row_headers.append("tr")
             .append("th")
-            .style("min-width", self.cell_px_width + "px")
+            .style("min-width", self.cell_row_headers_px_width + "px")
             .style("min-height", self.cell_px_height + "px")
-            .style("max-width", self.cell_px_width + "px")
+            .style("max-width", self.cell_row_headers_px_width + "px")
             .style("max-height", self.cell_px_height + "px");
 
         self.addTextArea(end_of_row_headers, "", "transparent", "transparent");
@@ -564,7 +564,7 @@ class Table extends VizTool {
                         .style("overflow", "hidden")
                         .style("border", "1px solid " + colorBorder)
                         .style("border-right", "none")
-                        .style("width", this.cell_px_width / 2).style("height", this.cell_px_height)
+                        .style("width", this.cell_row_headers_px_width / 2).style("height", this.cell_px_height)
                         .style("background-color", backgroundColor)
                         .style("padding-left", "10px")
                         .style("text-align", "left");
@@ -575,7 +575,7 @@ class Table extends VizTool {
                         .style("overflow", "hidden")
                         .style("border", "1px solid " + colorBorder)
                         .style("border-left", "none")
-                        .style("width", this.cell_px_width / 2).style("height", this.cell_px_height)
+                        .style("width", this.cell_row_headers_px_width / 2).style("height", this.cell_px_height)
                         .style("background-color", backgroundColor)
                         .style("padding-right", "10px")
                         .style("text-align", "right");
@@ -586,7 +586,7 @@ class Table extends VizTool {
                 .style("resize", "none")
                 .style("overflow", "hidden")
                 .style("border", "1px solid " + colorBorder)
-                .style("width", this.cell_px_width).style("height", this.cell_px_height)
+                .style("width", this.cell_row_headers_px_width).style("height", this.cell_px_height)
                 .style("background-color", backgroundColor)
                 .style("text-align", "center");
         }
@@ -646,7 +646,7 @@ class Table extends VizTool {
             self.setupHeadersWidth(
                 header,
                 index + 1,
-                Math.max(self.cell_px_width, rowsWidth[index] * 12));
+                rowsWidth[index] * 12);
         });
     }
 
