@@ -239,7 +239,7 @@ class Table extends VizTool {
     display() {
         const self = this;
 
-        // Width calculation (in px)
+        // Row headers width calculation (in px)
         if (this.data.headers && this.info_corner.col) {
             self.cell_row_headers_px_width = 12 * Math.max(
                 self.data.headers.row.data.slice(1)
@@ -364,13 +364,13 @@ class Table extends VizTool {
 
         self.d3.o.content = self.d3.o.sc_content.append("table").attr("id", "tviz_content").style("font-size", self.fontSize);
 
-        self.displayColumnHeaders();
-
         self.displayRowHeaders();
 
         // Adapt the size of the cells to match title
         // Col-header is the row-header when there is only one title to the table
         self.setupRowHeadersWidth(self.cell_row_headers_px_width);
+
+        self.displayColumnHeaders();
 
         self.displayContentCells();
 
@@ -641,7 +641,7 @@ class Table extends VizTool {
 
     setupDefaultColWidths() {
         const self = this;
-        var rowsWidth = self.findMaxColumnWidthsOfATable(self.data.content.cells);
+        var rowsWidth = self.findMaxColumnWidthOfATable(self.data.content.cells);
         self.d3.o.col_headers.forEach(function (header, index) {
             self.setupHeadersWidth(
                 header,
@@ -655,7 +655,7 @@ class Table extends VizTool {
      * @param tab : bi-dimensional array to look at
      * @return array : array containing max width for each column of the tab
      */
-    findMaxColumnWidthsOfATable(tab) {
+    findMaxColumnWidthOfATable(tab) {
 
         const self = this;
         let nbColumns = tab[0].length;
