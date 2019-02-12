@@ -238,7 +238,7 @@ class Table extends VizTool {
         const self = this;
 
         // Row headers width calculation (in px)
-        if (this.data.headers.row && this.info_corner.col) {
+        if (this.data.headers && this.data.headers.row && this.info_corner.col) {
             self.cell_px_width = 12 * Math.max(
                 self.data.headers.row.data.slice(1)
                 .map(x => x.length)
@@ -449,6 +449,7 @@ class Table extends VizTool {
 
             self.d3.o.col_headers.push(header_cell);
         });
+        // Prevents the table from having an offset when reaching the bottom on a big table
         let end_of_col_headers = self.d3.o.div_col_headers.append("th")
             .attr("valign", "top")
             .style("min-width", self.cell_px_width + "px")
@@ -481,6 +482,7 @@ class Table extends VizTool {
 
             self.d3.o.row_headers.push(header_cell);
         });
+        // Prevents the table from having an offset when reaching the bottom on a big table
         let end_of_row_headers = self.d3.o.div_row_headers.append("tr")
             .append("th")
             .style("min-width", self.cell_px_width + "px")
@@ -701,7 +703,7 @@ class Table extends VizTool {
         const self = this;
         const halfWidth = self.d3.e.selectorHalfWidth;
 
-        // creating the row header div
+        // Creating the row header corner div
         self.d3.o.corner.style("min-width", width)
             .style("max-width", width)
             .style("width", width);
@@ -718,6 +720,7 @@ class Table extends VizTool {
 
         self.d3.o.cornerSeparator.style("left", width - halfWidth);
 
+        // Editing the table style ( table -> tr -> th -> textarea)
         self.d3.o.div_row_headers.style("min-width", width)
             .style("max-width", width)
             .style("width", width);
