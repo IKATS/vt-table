@@ -149,8 +149,6 @@ class Table extends VizTool {
             e: {}
         };
 
-
-
     }
 
     /**
@@ -241,10 +239,11 @@ class Table extends VizTool {
 
         // Row headers width calculation (in px)
         if (this.data.headers && this.info_corner.col) {
+            // Review#497: (old remark deleted but not fixed) if there is no row headers in data (meaning no "row" member in "headers"), next instruction will fail
             self.cell_row_headers_px_width = 12 * Math.max(
                 self.data.headers.row.data.slice(1)
-                    .map(x => x.length)
-                    .reduce((x, y) => Math.max(x, y)),
+                .map(x => x.length)
+                .reduce((x, y) => Math.max(x, y)),
                 self.info_corner.col.length);
         } else {
             notify().error("The table you require is not filled.");
