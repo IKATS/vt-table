@@ -239,11 +239,18 @@ class Table extends VizTool {
 
         // Row headers width calculation (in px)
         if (this.data.headers && this.data.headers.row && this.info_corner.col) {
-            self.cell_px_width = 12 * Math.max(
-                self.data.headers.row.data.slice(1)
-                .map(x => x.length)
-                .reduce((x, y) => Math.max(x, y)),
-                self.info_corner.col.length);
+
+            if (self.info_corner.row) {
+                // Double title in he corner case
+                self.cell_px_width = 12 * Math.max(
+                    self.data.headers.row.data.slice(1).map(x => x.length).reduce((x, y) => Math.max(x, y)),
+                    self.info_corner.col.length + self.info_corner.row.length);
+            }else {
+                self.cell_px_width = 12 * Math.max(
+                    self.data.headers.row.data.slice(1).map(x => x.length).reduce((x, y) => Math.max(x, y)),
+                    self.info_corner.col.length);
+            }
+
         } else {
             notify().error("The table you require is not filled.");
         }
